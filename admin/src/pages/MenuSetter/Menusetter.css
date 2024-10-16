@@ -1,0 +1,126 @@
+.admin-panel {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  .admin-panel h1,
+  .admin-panel h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-menu-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+  }
+  
+  .add-menu-form h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #4caf50;
+  }
+  
+  .add-menu-form form div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .add-menu-form label {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .add-menu-form input {
+    padding: 10px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+  }
+  
+  .add-menu-form button {
+    padding: 12px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  
+  .add-menu-form button:hover {
+    background-color: #45a049;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  table th,
+  table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  table th {
+    background-color: #f2f2f2;
+    font-size: 1.2em;
+    color: #333;
+  }
+  
+  table td {
+    font-size: 1.1em;
+  }
+  
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ccc;
+  }
+  
+  button:first-child {
+    background-color: #008cba;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  button:first-child:hover {
+    background-color: #007bb5;
+  }
+  
+  button:last-child {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  button:last-child:hover {
+    background-color: #e41f1f;
+  }
+  
