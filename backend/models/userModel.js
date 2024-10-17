@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
         enum: ['USER', 'ADMIN'],
         default: 'USER',
       },
+      subscription:{type:Object,default:{}}
 }, { minimize: false })
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);

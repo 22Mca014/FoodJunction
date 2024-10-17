@@ -211,7 +211,7 @@ const createSubscription = async (req, res) => {
     const startDate = new Date(subscriptionStartDate);
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + subscriptionDuration);
-    console.log('jane de');
+    
     
 
     // Create a new subscription document
@@ -223,7 +223,7 @@ const createSubscription = async (req, res) => {
       subscriptionEndDate: endDate,
       paymentStatus: 'pending',
     });
-console.log("david0");
+
 
     // Save the subscription to the database
     await newSubscription.save();
@@ -256,6 +256,14 @@ console.log("david0");
 
     // Get the user's email from the database
     const user = await userModel.findById(userId);
+    user.subscription = {
+        subscriptionType,
+        subscriptionPayment: subcriptionPayment,
+        subscriptionStartDate: startDate,
+        subscriptionEndDate: endDate,
+        paymentStatus: 'pending',
+      };
+      await user.save();
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
