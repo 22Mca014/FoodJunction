@@ -13,7 +13,7 @@ const Subscription = () => {
   const [subscriptionStartDate] = useState(new Date().toISOString().split('T')[0]);
   
   // Backend URL
-  const backendUrl = 'http://localhost:4000';
+  const backendUrl = 'https://foodjunction.onrender.com';
 
   // Fetch token from localStorage
   useEffect(() => {
