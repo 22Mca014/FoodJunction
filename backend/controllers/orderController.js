@@ -2,6 +2,7 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
 import sendEmail from "../utils/sendEmail.js";  // Assuming sendEmail is in utils folder
+import Subscription  from "../models/subscriptionModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -174,70 +175,83 @@ const verifyOrder = async (req, res) => {
 
 
 //subcription controller
+
+
 const createSubscription = async (req, res) => {
-    try {
-        // Log incoming request data for debugging
-        console.log("Request Body: ", req.body);
-        const { userId, subcriptionPayment, subscriptionType, subscriptionStartDate } = req.body;
-
-        if (!userId || !subcriptionPayment || !subscriptionType || !subscriptionStartDate) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-
-        const subscriptionDuration = subscriptionType === "7 days" ? 7 : 30;
-        const startDate = new Date(subscriptionStartDate);
-        const endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + subscriptionDuration);
-
-        const newSubscription = new orderModel({
-            userId,
-            subcriptionPayment,
-            payment: false,
-            subscriptionType,
-            subscriptionStartDate: startDate,
-            subscriptionEndDate: endDate
-        });
-
-        await newSubscription.save();
-
-        const line_items = [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: subscriptionType,
-                    },
-                    unit_amount: subcriptionPayment * 100,
-                },
-                quantity: 1,
-            }
-        ];
-
-        // Log line items for Stripe session
-        console.log("Line Items for Stripe:", line_items);
-
-        const session = await stripe.checkout.sessions.create({
-            success_url: `${frontend_URL}/verify?success=true&subscriptionId=${newSubscription._id}`,
-            cancel_url: `${frontend_URL}/verify?success=false&subscriptionId=${newSubscription._id}`,
-            line_items: line_items,
-            mode: "payment",
-        });
-
-        // Log session URL for debugging
-        console.log("Stripe session created:", session);
-
-        const user = await userModel.findById(userId);
-
-        const subject = 'Subscription Details';
-        const text = `Your subscription has been initiated. Subscription ID: ${newSubscription._id}`;
-
-        await sendEmail(user.email, subject, text);
-
-        res.json({ success: true, session_url: session.url });
-    } catch (error) {
-        console.error("Error creating subscription:", error);
-        res.status(500).json({ message: "Internal server error" });
+  try {
+    const { userId, subcriptionPayment, subscriptionType, subscriptionStartDate } = req.body;
+    console.log(req.body)
+    // Validate required fields
+    if (!userId || !subcriptionPayment || !subscriptionType || !subscriptionStartDate) {
+      return res.status(400).json({ message: "All fields are required" });
     }
+
+    // Determine subscription duration based on the subscription type
+    const subscriptionDuration = subscriptionType === '7 days' ? 7 : 30;
+    const startDate = new Date(subscriptionStartDate);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + subscriptionDuration);
+    console.log('jane de');
+    
+
+    // Create a new subscription document
+    const newSubscription = new Subscription({
+      userId,
+      subscriptionType,
+      subscriptionPayment: subcriptionPayment,
+      subscriptionStartDate: startDate,
+      subscriptionEndDate: endDate,
+      paymentStatus: 'pending',
+    });
+console.log("david0");
+
+    // Save the subscription to the database
+    await newSubscription.save();
+
+    // Create Stripe line items
+    const line_items = [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: subscriptionType, // Name of the subscription plan
+          },
+          unit_amount: subcriptionPayment * 100, // Stripe expects the amount in cents
+        },
+        quantity: 1,
+      },
+    ];
+
+    // Create Stripe session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items,
+      mode: 'payment',
+      success_url: `${process.env.FRONTEND_URL}/verify?success=true&subscriptionId=${newSubscription._id}`,
+      cancel_url: `${process.env.FRONTEND_URL}/verify?success=false&subscriptionId=${newSubscription._id}`,
+    });
+    console.log('david');
+    
+
+    // Get the user's email from the database
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Send subscription details via email
+    const subject = 'Subscription Details';
+    const text = `Your subscription has been initiated. Subscription ID: ${newSubscription._id}`;
+    await sendEmail(user.email, subject, text);
+
+    // Respond with success and the Stripe session URL
+    res.json({ success: true, session_url: session.url });
+  } catch (error) {
+    // Log error details for debugging
+    console.error("Error creating subscription:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
+
 
 export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod ,createSubscription};

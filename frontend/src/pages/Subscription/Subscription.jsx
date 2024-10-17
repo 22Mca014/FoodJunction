@@ -2,49 +2,28 @@ import React, { useState, useEffect } from 'react';
 import './Subscription.css';
 import axios from 'axios';
 
-
-const Subscription = ({ url }) => {
+const Subscription = () => {
   const [selectedPlan, setSelectedPlan] = useState('7 days');
   const [showMenu, setShowMenu] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [clientData, setClientData] = useState(null); // State to hold client-specific data
   const [subscriptionStartDate] = useState(new Date().toISOString().split('T')[0]);
+  
+  // Backend URL
+  const backendUrl = 'http://localhost:4000';
 
-  // Fetch token from localStorage and decode userId
+  // Fetch token from localStorage
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Fetch token from localStorage
-    if (token) {
-      try {
-        const decodedToken = jwt_decode(token);
-        setUserId(decodedToken.userId);  // Assuming userId is part of the token payload
-        fetchClientData(token, decodedToken.userId); // Fetch client-specific data
-      } catch (err) {
-        console.error('Error decoding token:', err);
-      }
-    }
+    const token = localStorage.getItem('token');
+    console.log('Token:', token);
   }, []);
-
-  // Function to fetch client-specific data
-  const fetchClientData = async (token, userId) => {
-    try {
-      const response = await axios.get(`${url}/api/client/data`, {
-        headers: { token }, // Pass the token in the request headers
-        params: { userId }, // Optional: You can pass userId in params if needed
-      });
-      setClientData(response.data); // Store the client-specific data
-    } catch (error) {
-      console.error('Error fetching client data:', error.response ? error.response.data : error.message);
-    }
-  };
 
   // Fetch menu data from backend
   useEffect(() => {
     const fetchMenuData = async () => {
       try {
-        const response = await axios.get(`${url}/api/menu/menu`);
+        const response = await axios.get(`${backendUrl}/api/menu/menu`);
         setMenuData(response.data);
         setLoading(false);
       } catch (err) {
@@ -55,7 +34,7 @@ const Subscription = ({ url }) => {
     };
 
     fetchMenuData();
-  }, [url]);
+  }, []);
 
   const handlePlanChange = (plan) => {
     setSelectedPlan(plan);
@@ -66,31 +45,28 @@ const Subscription = ({ url }) => {
   };
 
   const handlePurchaseClick = async () => {
-    const token = localStorage.getItem('token');
-    if (!userId || !token) {
+    const token = localStorage.getItem('token'); // Only fetch the token
+    if (!token) {
       alert('User not logged in or invalid token');
       return;
     }
 
-    console.log('User ID:', userId);
+    console.log('Token:', token);
 
     const subscriptionPayment = selectedPlan === '7 days' ? 1500 : 4500;
     try {
       const response = await axios.post(
-        `${url}/api/order/subscription`,
+        `${backendUrl}/api/order/subscription`,
         {
-          userId,
-          subscriptionPayment,
+          subcriptionPayment: subscriptionPayment,
           subscriptionType: selectedPlan,
           subscriptionStartDate,
         },
-        {
-          headers: { token },  // Send token in headers for authentication
-        }
+        { headers: { token } }
       );
 
       if (response.data.success) {
-        window.location.href = response.data.session_url;  // Redirect to Stripe payment
+        window.location.href = response.data.session_url; // Redirect to Stripe payment
       }
     } catch (error) {
       console.error('Error creating subscription:', error.response ? error.response.data : error.message);
@@ -107,15 +83,6 @@ const Subscription = ({ url }) => {
       <p className="description">
         We offer subscription plans for our customers. Choose between a 7-day or 30-day plan to enjoy delicious meals.
       </p>
-      
-      {/* Display client-specific data */}
-      {clientData && (
-        <div className="client-details">
-          <h3>Client Data</h3>
-          <p>Welcome, {clientData.name}</p>
-          <p>Your current subscription: {clientData.currentSubscription}</p>
-        </div>
-      )}
       
       <div className="slidbar">
         <div className="left">
