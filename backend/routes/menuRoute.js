@@ -1,12 +1,7 @@
 // routes/menuRoutes.js
 import express from 'express';
-import {
-  getAllMenus,
-  getMenuByDay,
-  createMenu,
-  updateMenuByDay,
-  deleteMenuByDay,
-} from '../controllers/menuController.js';
+import { createMenu, deleteMenuByDay, getAllMenus, getMenuByDay, updateMenuByDay } from '../controllers/menucontroller.js';
+
 
 const menuRouter = express.Router();
 
