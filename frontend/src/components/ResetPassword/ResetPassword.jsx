@@ -29,7 +29,7 @@ const ResetPassword = () => {
 
         try {
             // Send new password and token to backend
-            const response = await axios.post('http://localhost:4000/api/user/reset-password', {
+            const response = await axios.post('https://foodjunction.onrender.com/api/user/reset-password', {
                 token,
                 newPassword
             });
