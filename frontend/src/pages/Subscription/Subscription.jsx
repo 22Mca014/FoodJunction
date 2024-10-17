@@ -8,6 +8,8 @@ const Subscription = () => {
   const [menuData, setMenuData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false); // New state for button loading
+  const [message, setMessage] = useState(''); // New state for showing messages
   const [subscriptionStartDate] = useState(new Date().toISOString().split('T')[0]);
   
   // Backend URL
@@ -51,9 +53,12 @@ const Subscription = () => {
       return;
     }
 
-    console.log('Token:', token);
-
     const subscriptionPayment = selectedPlan === '7 days' ? 1500 : 4500;
+    
+    // Set processing state to true when the purchase button is clicked
+    setIsProcessing(true);
+    setMessage('Just a moment...');
+
     try {
       const response = await axios.post(
         `${backendUrl}/api/order/subscription`,
@@ -71,6 +76,10 @@ const Subscription = () => {
     } catch (error) {
       console.error('Error creating subscription:', error.response ? error.response.data : error.message);
       alert('Failed to initiate purchase');
+    } finally {
+      // After processing, set isProcessing back to false and reset message
+      setIsProcessing(false);
+      setMessage('');
     }
   };
 
@@ -95,8 +104,13 @@ const Subscription = () => {
         <div className="right">
           <div className="button-row">
             <button onClick={handleMenuClick}>Weekly Menu</button>
-            <button onClick={handlePurchaseClick}>Purchase</button>
+            {/* Purchase button will show 'Processing...' when isProcessing is true */}
+            <button onClick={handlePurchaseClick} disabled={isProcessing}>
+              {isProcessing ? 'Processing...' : 'Purchase'}
+            </button>
           </div>
+
+          {message && <p>{message}</p>} {/* Display message when set */}
 
           {selectedPlan === '7 days' && (
             <div className="plan-details">

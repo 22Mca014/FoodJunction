@@ -172,6 +172,26 @@ const verifyOrder = async (req, res) => {
         res.json({ success: false, message: "Not Verified" });
     }
 };
+const verifySubscription = async (req, res) => {
+    const { subscriptionId, success } = req.body;
+    
+    try {
+      if (success === "true") {
+        // Update payment status to 'paid'
+        await Subscription.findByIdAndUpdate(subscriptionId, { paymentStatus: "paid" });
+        res.json({ success: true, message: "Paid" });
+      } else {
+        // Delete subscription if payment failed
+        await Subscription.findByIdAndDelete(subscriptionId);
+        res.json({ success: false, message: "Not Paid" });
+      }
+    } catch (error) {
+      console.error('Error verifying subscription:', error);
+      res.json({ success: false, message: "Not Verified", error: error.message });
+    }
+  };
+  
+
 
 
 //subcription controller
@@ -223,14 +243,15 @@ console.log("david0");
     ];
 
     // Create Stripe session
+
+   
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/verify?success=true&subscriptionId=${newSubscription._id}`,
-      cancel_url: `${process.env.FRONTEND_URL}/verify?success=false&subscriptionId=${newSubscription._id}`,
+      success_url: `${process.env.CLIENT_URL}/verifyplan?success=true&subscriptionId=${newSubscription._id}`,
+      cancel_url: `${process.env.CLIENT_URL}/verifyplan?success=false&subscriptionId=${newSubscription._id}`,
     });
-    console.log('david');
     
 
     // Get the user's email from the database
@@ -254,4 +275,4 @@ console.log("david0");
 };
 
 
-export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod ,createSubscription};
+export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod ,createSubscription,verifySubscription};

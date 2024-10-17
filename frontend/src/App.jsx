@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
 import Subscription from './pages/Subscription/Subscription'
+import Verifysubscription from './pages/Verify/Verifysubscription'
 
 
 const App = () => {
@@ -29,6 +30,9 @@ const App = () => {
           <Route path='/order' element={<PlaceOrder />}/>
           <Route path='/myorders' element={<MyOrders />}/>
           <Route path='/verify' element={<Verify />}/>
+          <Route path='/verifyplan' element={< Verifysubscription />}/>
+
+         
           <Route path='/subscription' element={<Subscription/>}/>
         </Routes>
       </div>
