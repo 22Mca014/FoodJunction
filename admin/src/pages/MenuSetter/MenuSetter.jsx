@@ -25,7 +25,7 @@ const MenuSetter = () => {
   // Fetch all menu data
   const fetchMenuData = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/menu/menu');
+      const response = await axios.get('https://foodjunction.onrender.com/api/menu/menu');
       setMenuData(response.data); // Set the fetched data to state
       setLoading(false); // Stop the loading state
     } catch (error) {
