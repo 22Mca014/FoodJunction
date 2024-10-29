@@ -53,6 +53,11 @@ const Navbar = ({ setShowLogin }) => {
           <img src={assets.basket_icon} alt="" />
           <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
         </Link>
+
+        {/* impliment Table booking */}
+        <Link to="/tablebooking">
+        <button>Table-Booking</button>
+        </Link>
         {!token ? (
           <button onClick={() => setShowLogin(true)}>Sign in</button>
         ) : (

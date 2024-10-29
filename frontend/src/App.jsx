@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify/Verify'
 import Subscription from './pages/Subscription/Subscription'
 import Verifysubscription from './pages/Verify/Verifysubscription'
+import Table from './pages/Table/Table'
 
 
 const App = () => {
@@ -34,8 +35,11 @@ const App = () => {
 
          
           <Route path='/subscription' element={<Subscription/>}/>
+          <Route path='/tablebooking' element={ <Table/>}/>
+
         </Routes>
       </div>
+     
       <Footer />
     </>
   )
