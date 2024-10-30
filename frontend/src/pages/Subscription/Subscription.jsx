@@ -12,7 +12,7 @@ const Subscription = () => {
   const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({ phoneNumber: '', address: '', pincode: '' });
   const [formErrors, setFormErrors] = useState({});
-  const backendUrl = 'http://localhost:4000';
+  const backendUrl = 'https://foodjunction.onrender.com';
 
   useEffect(() => {
     const fetchMenuData = async () => {
