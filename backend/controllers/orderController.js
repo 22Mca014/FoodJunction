@@ -199,11 +199,18 @@ const verifySubscription = async (req, res) => {
 
 const createSubscription = async (req, res) => {
   try {
-    const { userId, subcriptionPayment, subscriptionType, subscriptionStartDate } = req.body;
-    console.log(req.body)
+    const { userId, subcriptionPayment, subscriptionType, subscriptionStartDate, phoneNumber, deliveryAddress, pincode } = req.body;
+    console.log(req.body);
+
     // Validate required fields
-    if (!userId || !subcriptionPayment || !subscriptionType || !subscriptionStartDate) {
+    if (!userId || !subcriptionPayment || !subscriptionType || !subscriptionStartDate || !phoneNumber || !deliveryAddress || !pincode) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if user exists
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
     // Determine subscription duration based on the subscription type
@@ -211,8 +218,6 @@ const createSubscription = async (req, res) => {
     const startDate = new Date(subscriptionStartDate);
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + subscriptionDuration);
-    
-    
 
     // Create a new subscription document
     const newSubscription = new Subscription({
@@ -222,8 +227,10 @@ const createSubscription = async (req, res) => {
       subscriptionStartDate: startDate,
       subscriptionEndDate: endDate,
       paymentStatus: 'pending',
+      phoneNumber,
+      deliveryAddress,
+      pincode,
     });
-
 
     // Save the subscription to the database
     await newSubscription.save();
@@ -234,7 +241,7 @@ const createSubscription = async (req, res) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: subscriptionType, // Name of the subscription plan
+            name: subscriptionType,
           },
           unit_amount: subcriptionPayment * 100, // Stripe expects the amount in cents
         },
@@ -243,8 +250,6 @@ const createSubscription = async (req, res) => {
     ];
 
     // Create Stripe session
-
-   
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items,
@@ -252,21 +257,16 @@ const createSubscription = async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/verifyplan?success=true&subscriptionId=${newSubscription._id}`,
       cancel_url: `${process.env.CLIENT_URL}/verifyplan?success=false&subscriptionId=${newSubscription._id}`,
     });
-    
 
-    // Get the user's email from the database
-    const user = await userModel.findById(userId);
+    // Save subscription details to user's record
     user.subscription = {
-        subscriptionType,
-        subscriptionPayment: subcriptionPayment,
-        subscriptionStartDate: startDate,
-        subscriptionEndDate: endDate,
-        paymentStatus: 'pending',
-      };
-      await user.save();
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+      subscriptionType,
+      subscriptionPayment: subcriptionPayment,
+      subscriptionStartDate: startDate,
+      subscriptionEndDate: endDate,
+      paymentStatus: 'pending',
+    };
+    await user.save();
 
     // Send subscription details via email
     const subject = 'Subscription Details';
@@ -276,7 +276,6 @@ const createSubscription = async (req, res) => {
     // Respond with success and the Stripe session URL
     res.json({ success: true, session_url: session.url });
   } catch (error) {
-    // Log error details for debugging
     console.error("Error creating subscription:", error);
     res.status(500).json({ message: "Internal server error" });
   }
@@ -293,26 +292,36 @@ const getSubscribedUsers = async (req, res) => {
     });
 
     if (subscriptions.length === 0) {
-      return res.status(404).json({ success: false, message: 'No active subscriptions found' });
+      return res.status(404).json({ success: false, message: 'No subscribed users found' });
     }
 
-    // Map results to include only subscription info without user details
-    const subscribedUsers = subscriptions.map(subscription => ({
-      subscriptionType: subscription.subscriptionType,
-      subscriptionStartDate: subscription.subscriptionStartDate,
-      subscriptionEndDate: subscription.subscriptionEndDate
-    }));
+    // Get user details for each subscription without populate
+    const subscribedUsers = await Promise.all(
+      subscriptions.map(async (subscription) => {
+        const user = await userModel.findById(subscription.userId).select('name email');
+        return {
+          user,
+          subscriptionType: subscription.subscriptionType,
+          subscriptionStartDate: subscription.subscriptionStartDate,
+          subscriptionEndDate: subscription.subscriptionEndDate,
+          subscriptionPayment: subscription.subscriptionPayment,
+          paymentStatus: subscription.paymentStatus,
+          pincode:subscription.pincode,
+          phoneNumber:subscription.phoneNumber,
+          deliveryAddress:subscription.deliveryAddress
+
+        };
+      })
+    );
 
     res.status(200).json({
       success: true,
-      data: subscribedUsers
+      data: subscribedUsers,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error fetching subscribed users', error: error.message });
   }
 };
-
-export default getSubscribedUsers;
 
 
 

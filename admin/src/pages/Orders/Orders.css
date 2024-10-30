@@ -39,4 +39,12 @@
     .order-item img{
         width: 40px;
     }
-}
+}.order-item .address, .order-item .pinnumber, .order-item .phone {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .order-item .pinnumber, .order-item .address, .order-item .phone {
+    font-weight: bold;
+  }

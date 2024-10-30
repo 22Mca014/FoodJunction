@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 // Subscription Schema
 const subscriptionSchema = new mongoose.Schema({
   userId: {
@@ -29,6 +28,30 @@ const subscriptionSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'paid'],  // Default to 'pending' before confirmation
     default: 'pending',
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return /^\d{10}$/.test(v); // Validates a 10-digit phone number
+      },
+      message: props => `${props.value} is not a valid phone number!`
+    }
+  },
+  deliveryAddress: {
+    type: String,
+    required: true,
+  },
+  pincode: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return /^\d{5,6}$/.test(v); // Validates 5 or 6-digit pincode
+      },
+      message: props => `${props.value} is not a valid pincode!`
+    }
   },
   createdAt: {
     type: Date,
