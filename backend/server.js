@@ -7,8 +7,10 @@ import 'dotenv/config';
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import menuRouter from "./routes/menuRoute.js";
-import { bookTable } from "./controllers/TableBookController/bookingController.js";
-import { initTables } from "./controllers/TableBookController/tableController.js";
+
+
+import TableRouter from "./routes/TableBookRoutes/tableRoutes.js";
+import BookRouter from "./routes/TableBookRoutes/bookingRoutes.js";
 
 
 // App config
@@ -32,8 +34,8 @@ app.use("/api/order", orderRouter);
 app.use("/api/menu",menuRouter);
 
 //Table booking
-app.use('/api/tables', initTables);
-app.use('/api/bookings', bookTable);
+app.use('/api/tables', TableRouter);
+app.use('/api/bookings', BookRouter);
 
 app.get("/", (req, res) => {
     res.send("API Working");

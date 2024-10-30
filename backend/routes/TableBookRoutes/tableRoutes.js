@@ -1,29 +1,18 @@
 import express from 'express';
-import { initTables } from '../../controllers/TableBookController/tableController.js';
-import Table from '../../models/TableBookModel/Tablemodel.js';
+import {  checkAvailability, getTableDetails, updateTableCounts } from '../../controllers/TableBookController/tableController.js';
 
-const router = express.Router();
 
-router.post('/init', initTables);
+const TableRouter = express.Router();
 
-router.get('/availability', async (req, res) => {
-  const { date, tableType } = req.query;
+// Route to add or update a single table (either couple or family)
 
-  try {
-    const table = await Table.findOne({ type: tableType });
-    if (!table) {
-      return res.status(404).json({ available: 'N/A' });
-    }
 
-    // Check availability for the given date
-    const formattedDate = new Date(date).toISOString().split('T')[0];
-    const availableCount = table.available[formattedDate] ?? table.count;
+// Route to get all table details
+TableRouter.get('/details', getTableDetails);
+TableRouter.post('/available', checkAvailability);
 
-    res.json({ available: availableCount });
-  } catch (error) {
-    console.error('Error fetching availability:', error);
-    res.status(500).json({ error: 'Error fetching availability' });
-  }
-});
 
-export default router;
+// Route to update counts for both couple and family tables together
+TableRouter.put('/updateCounts', updateTableCounts);
+
+export default TableRouter;

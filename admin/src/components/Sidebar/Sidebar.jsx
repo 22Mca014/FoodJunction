@@ -20,7 +20,7 @@ const Sidebar = () => {
             <p>Orders</p>
         </NavLink>
 {/* edfk */}
-<NavLink to='/discount' className="sidebar-option">
+<NavLink to='/addTable' className="sidebar-option">
           <img src={assets.order_icon} alt="whatsup" />
           <p>Discount</p>
         </NavLink>

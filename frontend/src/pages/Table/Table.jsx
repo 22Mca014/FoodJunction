@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Table.css'; // Assuming you have a CSS file for styling
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './Table.css';
 
 function Table() {
   const [formData, setFormData] = useState({
@@ -9,97 +11,136 @@ function Table() {
     date: '',
   });
   const [availableTables, setAvailableTables] = useState(null);
-  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  // Handles changes to form fields
+  // Define today and max date (7 days from today)
+  const today = new Date().toISOString().split('T')[0];
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 7);
+  const maxDateString = maxDate.toISOString().split('T')[0];
+
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Fetch available tables whenever date or table type changes
+  // Fetch table availability when date or table type changes
   useEffect(() => {
     const fetchAvailability = async () => {
       if (formData.date && formData.tableType) {
+        setLoading(true);
         try {
-          const response = await axios.get(`http://localhost:4000/api/tables/availability`, {
-            params: { date: formData.date, tableType: formData.tableType },
+          const response = await axios.post('http://localhost:4000/api/tables/available', {
+            date: formData.date,
+            tableType: formData.tableType,
           });
-          setAvailableTables(response.data.available); // Update available tables count
+          setAvailableTables(response.data.availableCount);
         } catch (error) {
-          setAvailableTables('N/A'); // In case of error, show N/A
           console.error("Error fetching availability:", error);
+          setAvailableTables('N/A');
+        } finally {
+          setLoading(false);
         }
       }
     };
     fetchAvailability();
   }, [formData.date, formData.tableType]);
 
-  // Handles form submission for booking a table
+  // Handle booking submission with validation checks
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      toast.error('Please log in to book a table.', { autoClose: 3000 });
+      return;
+    }
+
+    if (availableTables === 0) {
+      toast.error('No tables available for the selected date and type.', { autoClose: 3000 });
+      return;
+    }
+
+    if (availableTables < formData.quantity) {
+      toast.error(`Only ${availableTables} table(s) available. Adjust the quantity.`, { autoClose: 3000 });
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:4000/api/bookings/book', {
-        ...formData,
-        userId: '64b0b7f5f9c51a5d5f5a1234', // Replace with actual user ID
-      });
-      setMessage(response.data); // Show success message
-      setAvailableTables((prev) => prev - formData.quantity); // Update availability after booking
+      const response = await axios.post(
+        'http://localhost:4000/api/bookings/book',
+        {
+          ...formData,
+        },
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        toast.success('Table booked successfully!', { autoClose: 3000 });
+        setAvailableTables((prev) => prev - formData.quantity);
+      }
     } catch (error) {
-      setMessage(error.response ? error.response.data : 'Error booking table');
-      console.error("Error booking table:", error);
+      toast.error(error.response?.data?.message || 'Error booking table', { autoClose: 3000 });
     }
   };
 
   return (
     <div className="booking-container">
-      <h2>Book a Table</h2>
-      <div className="form-and-availability">
-        <form onSubmit={handleSubmit} className="booking-form">
-          <label>
-            Select Table Type:
-            <select name="tableType" value={formData.tableType} onChange={handleChange}>
-              <option value="couple">Couple Table (2 people)</option>
-              <option value="family">Family Table (4 people)</option>
-            </select>
-          </label>
+      <h2>Table Booking</h2>
+      <form onSubmit={handleSubmit} className="booking-form">
+        <label>
+          Table Type:
+          <select name="tableType" value={formData.tableType} onChange={handleChange}>
+            <option value="couple">Couple Table (2 seats)</option>
+            <option value="family">Family Table (4 seats)</option>
+          </select>
+        </label>
 
-          <label>
-            Number of Tables:
-            <input
-              type="number"
-              name="quantity"
-              value={formData.quantity}
-              min="1"
-              max="5"
-              onChange={handleChange}
-              required
-            />
-          </label>
+        <label>
+          Quantity:
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            min="1"
+            max={availableTables || 1}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-          <label>
-            Select Date:
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-            />
-          </label>
+        <label>
+          Date:
+          <input
+            type="date"
+            name="date"
+            value={formData.date}
+            min={today}
+            max={maxDateString}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-          <button type="submit">Book Table</button>
-        </form>
+        <button type="submit">Book Table</button>
+      </form>
 
-        <div className="availability">
-          <h3>Available Tables</h3>
+      <div className="availability">
+        <h3>Available Tables</h3>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
           <p>
-            {formData.tableType === 'couple' ? 'Couple' : 'Family'} Tables Available:{" "}
-            {availableTables !== null ? availableTables : 'Select date and table type'}
+            {availableTables !== null
+              ? availableTables === 'N/A'
+                ? 'Unable to fetch availability. Please try again later.'
+                : availableTables
+              : 'Select a date and table type to check availability'}
           </p>
-        </div>
+        )}
       </div>
-      {message && <p className="message">{message}</p>}
+
+      <ToastContainer />
     </div>
   );
 }

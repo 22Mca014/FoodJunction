@@ -1,95 +1,56 @@
-/* Basic Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 .booking-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
-}
-
-h2 {
-  text-align: center;
-  color: #333;
-  margin-bottom: 1rem;
-}
-
-.form-and-availability {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
-  align-items: flex-start;
+  padding: 20px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
 }
 
 .booking-form {
-  width: 60%;
-}
-
-.booking-form label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: #555;
-}
-
-.booking-form input,
-.booking-form select {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.3s;
 }
 
-.booking-form input:focus,
-.booking-form select:focus {
-  border-color: #007acc;
+label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
 }
 
-.booking-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #007acc;
-  color: #fff;
-  border: none;
+input, select, button {
+  padding: 8px;
   border-radius: 4px;
-  font-size: 1rem;
-  font-weight: bold;
+  border: 1px solid #ddd;
+  font-size: 1em;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: transform 0.2s ease;
 }
 
-.booking-form button:hover {
-  background-color: #005fa3;
+button:hover {
+  transform: scale(1.05);
 }
 
 .availability {
-  width: 40%;
-  padding: 1rem;
-  border-left: 1px solid #ddd;
-}
-
-.availability h3 {
+  font-weight: bold;
   color: #333;
-  margin-bottom: 0.5rem;
 }
 
-.availability p {
-  font-size: 1.1rem;
-  color: #007acc;
+.Toastify__toast--success {
+  background-color: #28a745;
 }
 
-.message {
-  text-align: center;
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: green;
+.Toastify__toast--error {
+  background-color: #dc3545;
 }

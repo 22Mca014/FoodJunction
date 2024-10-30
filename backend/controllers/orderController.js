@@ -283,4 +283,38 @@ const createSubscription = async (req, res) => {
 };
 
 
-export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod ,createSubscription,verifySubscription};
+
+const getSubscribedUsers = async (req, res) => {
+  try {
+    // Find active subscriptions with payment status 'paid' and end date in the future
+    const subscriptions = await Subscription.find({
+      paymentStatus: 'paid',
+      subscriptionEndDate: { $gte: new Date() }  // Only active subscriptions
+    });
+
+    if (subscriptions.length === 0) {
+      return res.status(404).json({ success: false, message: 'No active subscriptions found' });
+    }
+
+    // Map results to include only subscription info without user details
+    const subscribedUsers = subscriptions.map(subscription => ({
+      subscriptionType: subscription.subscriptionType,
+      subscriptionStartDate: subscription.subscriptionStartDate,
+      subscriptionEndDate: subscription.subscriptionEndDate
+    }));
+
+    res.status(200).json({
+      success: true,
+      data: subscribedUsers
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching subscribed users', error: error.message });
+  }
+};
+
+export default getSubscribedUsers;
+
+
+
+
+export { placeOrder, listOrders, userOrders, updateStatus, verifyOrder, placeOrderCod ,createSubscription,verifySubscription, getSubscribedUsers };

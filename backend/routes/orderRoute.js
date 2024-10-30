@@ -1,6 +1,6 @@
 import express from 'express';
 import authMiddleware from '../middleware/auth.js';
-import { listOrders, placeOrder,updateStatus,userOrders, verifyOrder, placeOrderCod,  createSubscription, verifySubscription } from '../controllers/orderController.js';
+import { listOrders, placeOrder,updateStatus,userOrders, verifyOrder, placeOrderCod,  createSubscription, verifySubscription, getSubscribedUsers } from '../controllers/orderController.js';
 
 const orderRouter = express.Router();
 
@@ -13,6 +13,10 @@ orderRouter.post("/verifysubscription",verifySubscription);
 
 orderRouter.post("/placecod",authMiddleware,placeOrderCod);
 orderRouter.post("/subscription",authMiddleware,createSubscription);
+
+//subscription details
+orderRouter.get("/subscriptionDetails",getSubscribedUsers);
+
 
 
 

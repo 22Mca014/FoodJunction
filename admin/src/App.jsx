@@ -10,6 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Discount from './pages/Discount/Discount'
 import MenuSetter from './pages/MenuSetter/MenuSetter'
+import AddTable from './pages/AddTable/AddTable'
+
+
 
 const App = () => {
   return (
@@ -25,6 +28,8 @@ const App = () => {
           <Route path="/orders" element={<Orders />} />
           <Route path='/discount' element={<Discount />} />
           <Route path='/menusetter' element={<MenuSetter/>} />
+          <Route path='/addTable' element={<AddTable/>} />
+
 
         </Routes>
       </div>
