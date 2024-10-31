@@ -12,7 +12,7 @@ const LoginPage = ({ onLogin }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:4000/api/user/admin-login', { email, password });
+      const response = await axios.post('https://foodjunction.onrender.com/api/user/admin-login', { email, password });
 
       if (response.data.success) {
         localStorage.setItem('token', response.data.token); // Store the token
