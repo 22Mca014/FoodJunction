@@ -66,7 +66,7 @@ const MenuSetter = () => {
   // Delete a menu
   const handleDeleteMenu = async (day) => {
     try {
-      await axios.delete(`http://localhost:4000/api/menu/menu/${day}`);
+      await axios.delete(`https://foodjunction.onrender.com/api/menu/menu/${day}`);
       fetchMenuData(); // Refresh the menu data after deletion
     } catch (error) {
       setError(`Failed to delete menu for ${day}`);
