@@ -26,7 +26,7 @@ const MyOrders = () => {
 
   const fetchSubscriptions = async () => {
     try {
-      const response = await axios.get("http://localhost:4000" + "/api/order/subscriptionDetails", {
+      const response = await axios.get(url + "/api/order/subscriptionDetails", {
         headers: { token },
       });
       setSubscriptions(response.data.data || []);
