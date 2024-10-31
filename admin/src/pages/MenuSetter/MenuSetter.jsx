@@ -46,13 +46,13 @@ const MenuSetter = () => {
     try {
       if (isEditing) {
         // If editing, send a PUT request to update the menu
-        const response = await axios.put(`http://localhost:4000/api/menu/menu/${editingDay}`, newMenu); // Use 'editingDay'
+        const response = await axios.put(`https://foodjunction.onrender.com/api/menu/menu/${editingDay}`, newMenu); // Use 'editingDay'
         console.log('Menu updated:', response.data); // Log the updated menu data
         setIsEditing(false); // Reset editing state
         setEditingDay(''); // Clear the day being edited
       } else {
         // If not editing, send a POST request to add a new menu
-        const response = await axios.post('http://localhost:4000/api/menu/add', newMenu);
+        const response = await axios.post('https://foodjunction.onrender.com/api/menu/add', newMenu);
         console.log('Menu added:', response.data); // Log the added menu data
       }
       fetchMenuData(); // Refresh the menu data after adding/updating
