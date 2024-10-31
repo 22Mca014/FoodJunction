@@ -48,3 +48,14 @@
   .order-item .pinnumber, .order-item .address, .order-item .phone {
     font-weight: bold;
   }
+  /* button css */
+  .button {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    color: #000;
+  }
+  
+
+  

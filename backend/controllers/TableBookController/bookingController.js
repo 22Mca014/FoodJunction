@@ -1,5 +1,6 @@
 import Table from '../../models/TableBookModel/Tablemodel.js';
 import Booking from '../../models/TableBookModel/bookModel.js';
+import userModel from '../../models/userModel.js'
 import moment from 'moment';
 
 export const bookTable = async (req, res) => {
@@ -52,5 +53,33 @@ export const bookTable = async (req, res) => {
     console.log(err);
     
     res.status(500).json({ success: false, message: 'Error booking table', error: err.message });
+  }
+};
+
+//fetch booking
+export const fetchBooking = async (req, res) => {
+  try {
+    // Populate 'userId' to fetch user details (name and email) from the User model
+    const bookings = await Booking.find({}).populate('userId', 'name email');
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ success: false, message: 'No bookings found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Booked tables fetched successfully',
+      bookings: bookings.map((booking) => ({
+        userId: booking.userId._id,
+        userName: booking.userId.name,
+        userEmail: booking.userId.email,
+        date: booking.date,
+        tableType: booking.tableType,
+        quantity: booking.quantity,
+      })),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error fetching bookings', error: error.message });
   }
 };
