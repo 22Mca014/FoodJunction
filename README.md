@@ -1,6 +1,3 @@
-Here’s an updated README file for **Food Junction** with internal links for the Table of Contents that allow smooth scrolling within the same page.
-
----
 
 # Food Junction
 
