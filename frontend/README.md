@@ -7,6 +7,7 @@ Here’s an updated **README.md** file for **Food Junction**, including the URLs
 **Food Junction** is a full-featured restaurant web application, designed to enhance the customer experience and streamline restaurant management. The project consists of a client-facing site for users to browse, order food, subscribe, and make reservations, along with a secure admin site for restaurant staff to manage orders, tables, menu items, and more.
 
 - **Frontend URL**: [Food Junction Client Site](https://foodjunction-1.onrender.com/)
+- **Backend URL**: [Food Junction Client Site](https://foodjunction.onrender.com/)
 - **Admin URL**: [Food Junction Backend API](https://foodjunction-2.onrender.com/)
 
 ## Table of Contents
@@ -90,7 +91,7 @@ Here’s an updated **README.md** file for **Food Junction**, including the URLs
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/username/food-junction.git
+   git clone https://github.com/22Mca014/food-junction.git
    ```
    
 2. **Navigate to the project directory**:
@@ -104,11 +105,15 @@ Here’s an updated **README.md** file for **Food Junction**, including the URLs
    npm install
    cd ../backend
    npm install
+    cd ../admin
+   npm install
    ```
 
 4. **Start the frontend and backend servers**:
-   - Frontend: `npm start` from the frontend directory
-   - Backend: `npm start` from the backend directory
+   - Frontend: `npm run dev` from the frontend directory
+   - Backend: `npm run server` from the backend directory
+   - Admin: `npm run dev` from the Admin directory
+     
 
 ---
 
