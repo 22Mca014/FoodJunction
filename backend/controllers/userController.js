@@ -139,4 +139,37 @@ const resetPassword = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser, forgotPassword, resetPassword };
+//Admin log in
+const adminLogin = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // Check if the user exists
+      const user = await userModel.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ success: false, message: "User does not exist" });
+      }
+  
+      // Check if the password matches
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, message: "Invalid credentials" });
+      }
+  
+      // Check if the user is an admin
+      if (user.role !== 'ADMIN') {
+        return res.status(403).json({ success: false, message: "Access denied. Admins only." });
+      }
+  
+      // Generate token if user is an admin
+      const token = createToken(user._id);
+      return res.status(200).json({ success: true, message: "Thank you for logging in", token });
+  
+    } catch (error) {
+      console.error("Admin login error:", error);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+  
+
+export { loginUser, registerUser, forgotPassword, resetPassword,adminLogin };
