@@ -31,7 +31,7 @@ function Table() {
       if (formData.date && formData.tableType) {
         setLoading(true);
         try {
-          const response = await axios.post('http://localhost:4000/api/tables/available', {
+          const response = await axios.post('https://foodjunction.onrender.com/api/tables/available', {
             date: formData.date,
             tableType: formData.tableType,
           });
