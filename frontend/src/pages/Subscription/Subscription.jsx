@@ -3,7 +3,7 @@ import './Subscription.css';
 import axios from 'axios';
 
 const Subscription = () => {
-  const [selectedPlan, setSelectedPlan] = useState(null); // Track selected plan
+  const [selectedPlan, setSelectedPlan] = useState('7 days'); // Default to 7-day plan
   const [showMenu, setShowMenu] = useState(false);
   const [menuData, setMenuData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,6 @@ const Subscription = () => {
   };
 
   const handlePurchaseClick = async () => {
-    // Validate form data before proceeding
     if (!validateForm()) {
       console.log('Form validation failed', formErrors);
       return;
@@ -102,7 +101,6 @@ const Subscription = () => {
       setIsProcessing(false);
     }
   };
-  
 
   if (loading) return <p>Loading menu...</p>;
   if (error) return <p>{error}</p>;
