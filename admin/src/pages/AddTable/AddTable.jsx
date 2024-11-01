@@ -17,7 +17,7 @@ const AddTable = () => {
   // Get all table details
   const fetchTableDetails = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/tables/details');
+      const response = await axios.get('https://foodjunction.onrender.com/api/tables/details');
       setTables(response.data.data);
     } catch (error) {
       console.error('Error fetching table details:', error);
@@ -27,7 +27,7 @@ const AddTable = () => {
   // Update couple and family table counts
   const handleUpdateTableCounts = async () => {
     try {
-      const response = await axios.put('http://localhost:4000/api/tables/updateCounts', {
+      const response = await axios.put('https://foodjunction.onrender.com/api/tables/updateCounts', {
         coupleCount,
         familyCount,
         date

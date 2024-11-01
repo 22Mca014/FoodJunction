@@ -22,7 +22,7 @@ const Sidebar = () => {
 {/* edfk */}
 <NavLink to='/addTable' className="sidebar-option">
           <img src={assets.order_icon} alt="whatsup" />
-          <p>Discount</p>
+          <p>Add Table</p>
         </NavLink>
         <NavLink to='/menusetter' className="sidebar-option">
           <img src={assets.order_icon} alt="whatsup" />
