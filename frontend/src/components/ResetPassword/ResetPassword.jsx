@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'; // useNavigate for redirection
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { assets } from '../../assets/assets'
+import { assets } from '../../assets/assets';
  
- import  "./ResetPassword.css"
+import "./ResetPassword.css";
 
 const ResetPassword = () => {
     const location = useLocation();
@@ -43,42 +43,41 @@ const ResetPassword = () => {
         } catch (error) {
             toast.error("Something went wrong, please try again.");
         }
-    }
+    };
 
     // Function to redirect to the home page when the cross icon is clicked
     const handleClose = () => {
         navigate('/'); // Redirect to the home page
-    }
+    };
 
     return (
         <div className="reset-password-container">
             <div className="container">
-
-            <div className="reset-password-header">
-                <h2>Reset Your Password</h2>
-                <img src={assets.cross_icon} alt="close" onClick={handleClose} className="close-icon" />
-            </div>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        placeholder="New Password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        required
-                    />
+                <div className="reset-password-header">
+                    <h2>Reset Your Password</h2>
+                    <img src={assets.cross_icon} alt="close" onClick={handleClose} className="close-icon" />
                 </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        placeholder="Confirm New Password"
-                        value={confirmNewPassword}
-                        onChange={(e) => setConfirmNewPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Reset Password</button>
-            </form>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="New Password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <input
+                            type="password"
+                            placeholder="Confirm New Password"
+                            value={confirmNewPassword}
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" style={{ backgroundColor: '#008cba' }}>Reset Password</button>
+                </form>
             </div>
         </div>
     );

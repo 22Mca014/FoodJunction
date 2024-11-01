@@ -5,12 +5,12 @@
     
 }
 .explore-menu h1{
-    color: #262626;
+    color: whitesmoke;
     font-weight: 500;
 }
 .explore-menu-text{
     max-width: 60%;
-    color: #808080;
+    color: whitesmoke;
 }
 .explore-menu-list{
     display: flex;
@@ -32,12 +32,12 @@
     transition: 0.2s;
 }
 .explore-menu-list-item .active{
-    border: 4px solid tomato;
+    border: 4px solid #fb8122;
     padding: 2px;
 }
 .explore-menu-list-item p{
     margin-top: 10px;
-    color: #747474;
+    color: whitesmoke;
     font-size: max(1.4vw,16px);
     cursor: pointer;
 }

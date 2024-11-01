@@ -9,6 +9,7 @@ const MyOrders = () => {
   const [subscriptions, setSubscriptions] = useState([]);  // Subscription data
   const [loading, setLoading] = useState(true);  // Loading state
   const [error, setError] = useState(null);      // Error state
+  const [activeTab, setActiveTab] = useState('orders'); // Tab state
   const { url, token, currency } = useContext(StoreContext);
 
   const fetchOrders = async () => {
@@ -51,50 +52,68 @@ const MyOrders = () => {
   }
 
   return (
-    <div className="container" style={{"maxWidth": "1200px"}}>
-      <div className="my-orders">
-        <h2>My Orders</h2>
-        
-        <div className="container" style={{ maxWidth: "1200px" }}>
-          {data.length === 0 ? (
-            <p>No orders found</p>
-          ) : (
-            data.map((order, index) => (
-              <div key={index} className="my-orders-order">
-                <img src={assets.parcel_icon} alt="Order Icon" />
-                <p>{order.items.map((item, idx) => (
-                  idx === order.items.length - 1
-                    ? `${item.name} x ${item.quantity}`
-                    : `${item.name} x ${item.quantity}, `
-                ))}</p>
-                <p>{currency}{order.amount}.00</p>
-                <p>Items: {order.items.length}</p>
-                <p><span>&#x25cf;</span> <b>{order.status}</b></p>
-                <button onClick={fetchOrders}>Track Order</button>
-              </div>
-            ))
-          )}
-        </div>
+    <div className="container" style={{ maxWidth: "1200px" }}>
+      <div className="tabs">
+        <button 
+          className={activeTab === 'orders' ? 'active' : ''} 
+          onClick={() => setActiveTab('orders')}
+          style={{ backgroundColor: '#008cba', padding: '15px', marginRight: '15px' }}
+        >
+          My Orders
+        </button>
+        <button 
+          className={activeTab === 'subscriptions' ? 'active' : ''} 
+          onClick={() => setActiveTab('subscriptions')}
+          style={{ backgroundColor: '#008cba', padding: '15px' }}
+        >
+          Subscription Details
+        </button>
       </div>
 
-      {/* Subscription Details Section */}
-      <div className="subscription">
-        <h2>Subscription Details</h2>
-        
-        <div className="container" style={{ maxWidth: "1200px" }}>
-          {subscriptions.length === 0 ? (
-            <p>No subscriptions found</p>
-          ) : (
-            subscriptions.map((subscription, index) => (
-              <div key={index} className="subscription-item">
-                <p><strong>Subscription Type:</strong> {subscription.subscriptionType}</p>
-                <p><strong>Start Date:</strong> {new Date(subscription.subscriptionStartDate).toLocaleDateString()}</p>
-                <p><strong>End Date:</strong> {new Date(subscription.subscriptionEndDate).toLocaleDateString()}</p>
-              </div>
-            ))
-          )}
+      {activeTab === 'orders' && (
+        <div className="my-orders">
+          <h2>My Orders</h2>
+          <div className="container" style={{ maxWidth: "1200px" }}>
+            {data.length === 0 ? (
+              <p>No orders found</p>
+            ) : (
+              data.map((order, index) => (
+                <div key={index} className="my-orders-order">
+                  <img src={assets.parcel_icon} alt="Order Icon" />
+                  <p>{order.items.map((item, idx) => (
+                    idx === order.items.length - 1
+                      ? `${item.name} x ${item.quantity}`
+                      : `${item.name} x ${item.quantity}, `
+                  ))}</p>
+                  <p>{currency}{order.amount}.00</p>
+                  <p>Items: {order.items.length}</p>
+                  <p><span>&#x25cf;</span> <b>{order.status}</b></p>
+                  <button onClick={fetchOrders} style={{ backgroundColor: '#008cba', padding: '15px' }}>Track Order</button>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'subscriptions' && (
+        <div className="subscription">
+          <h2>Subscription Details</h2>
+          <div className="container" style={{ maxWidth: "1200px" }}>
+            {subscriptions.length === 0 ? (
+              <p>No subscriptions found</p>
+            ) : (
+              subscriptions.map((subscription, index) => (
+                <div key={index} className="subscription-item">
+                  <p><strong>Subscription Type:</strong> {subscription.subscriptionType}</p>
+                  <p><strong>Start Date:</strong> {new Date(subscription.subscriptionStartDate).toLocaleDateString()}</p>
+                  <p><strong>End Date:</strong> {new Date(subscription.subscriptionEndDate).toLocaleDateString()}</p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

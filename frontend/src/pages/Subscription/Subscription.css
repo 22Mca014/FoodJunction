@@ -2,6 +2,9 @@
   max-width: 600px;
   margin: 0 auto;
   text-align: center;
+  color: white;
+  height: auto;
+  padding-bottom: 30px;
 }
 
 .description {
@@ -55,7 +58,7 @@
 .purchase-button {
   margin-top: 15px;
   padding: 10px;
-  background-color: #28a745;
+  background-color: #008cba;
   color: white;
   border: none;
   cursor: pointer;

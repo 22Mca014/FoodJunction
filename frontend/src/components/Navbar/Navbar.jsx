@@ -45,18 +45,20 @@ const Navbar = ({ setShowLogin }) => {
         </a>
       </ul>
       <div className="navbar-right">
-        <Link to='/subscription'>
-        <FaUtensils size={30} />
-        </Link>
+       
         {/* <img src={assets.search_icon} alt="" /> */}
-        <Link to="/cart" className="navbar-search-icon">
-          <img src={assets.basket_icon} alt="" />
-          <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
+       
+        <Link to='/subscription'>
+        <button id="subcription">Lunch-Box</button>
         </Link>
 
         {/* impliment Table booking */}
         <Link to="/tablebooking">
-        <button>Table-Booking</button>
+        <button id="table">Table-Booking</button>
+        </Link>
+        <Link to="/cart" className="navbar-search-icon">
+          <img src={assets.basket_icon} alt="" />
+          <div className={getTotalCartAmount() > 0 ? "dot" : ""}></div>
         </Link>
         {!token ? (
           <button onClick={() => setShowLogin(true)}>Sign in</button>

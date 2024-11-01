@@ -7,7 +7,7 @@ const Footer = () => {
     <div className='footer' id='footer'>
       <div className="footer-content">
         <div className="footer-content-left">
-            <img className='logo' src={assets.logo} alt="" />
+            <img className='logo' src={assets.logo} alt="" style={{ width: '400px' }} />
           
             <div className="footer-social-icons">
                 <img src={assets.facebook_icon} alt="" />
@@ -16,7 +16,7 @@ const Footer = () => {
             </div>
         </div>
         <div className="footer-content-center">
-            <h2>About</h2>
+            <h2 >About</h2>
             <p>Food Junction is a beloved restaurant offering authentic Bengali cuisine, known for dishes like Shorshe Ilish and Mishti Doi. With a warm ambiance and hospitable staff, it provides a delightful experience celebrating Bengal's rich flavors..</p>
         </div>
         <div className="footer-content-right">

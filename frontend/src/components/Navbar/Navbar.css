@@ -16,19 +16,19 @@
     display: flex;
     list-style: none;
     gap: 20px;
-    color: #49557E;
+    color:  whitesmoke;
     font-size: 18px;
 }
 
 .navbar-menu .active {
     padding-bottom: 2px;
-    border-bottom: 2px solid #49557E;
+    border-bottom: 2px solid  #fb8122;
 }
 
 .navbar-right {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
 }
 
 .navbar-search-icon{
@@ -48,16 +48,17 @@ position: relative;
 .navbar-right button {
     background: transparent;
     font-size: 16px;
-    color: #49557E;
-    border: 1px solid #FF4C24;
+    color:whitesmoke;
+    border: 1px solid #fb8122;
     padding: 10px 30px;
     border-radius: 50px;
     cursor: pointer;
     transition: 0.3s;
+   
 }
 
 .navbar-right button:hover {
-    background: #fff4f2;
+    background: #3e2d2d;
 }
 
 .navbar-profile{
@@ -89,12 +90,12 @@ position: relative;
     background-color: #fff2ef;
     padding: 12px 25px;
     border-radius: 4px;
-    border: 1px solid tomato;
+    border: 1px solid #fb8122;
     outline: 2px solid white;
     list-style: none;
 }
 .navbar-profile hr{
-    background-color: gray;
+    background-color: #e1e2e2;
     height: 1px;
     border: none;
 }
@@ -117,7 +118,7 @@ position: relative;
     }
 
     .navbar-right button {
-        padding: 8px 25px;
+        padding: 6px 20px;
     }
 }
 
@@ -140,7 +141,7 @@ position: relative;
     }
 
     .navbar-right button {
-        font-size: 15px;
+        font-size: 10px;
         padding: 7px 20px;
     }
 }
