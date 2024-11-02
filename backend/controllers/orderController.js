@@ -285,7 +285,8 @@ const createSubscription = async (req, res) => {
 
 const getSubscribedUsers = async (req, res) => {
   try {
-    const { userId } = req.query; // Extract userId from query parameters
+    const { userId } = req.body; // Extract userId from request body set by middleware
+    console.log(userId);
 
     if (!userId) {
       return res.status(400).json({ success: false, message: 'User ID is required' });

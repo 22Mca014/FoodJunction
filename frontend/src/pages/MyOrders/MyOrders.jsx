@@ -19,6 +19,7 @@ const MyOrders = () => {
       });
       setData(response.data.data || []);
     } catch (err) {
+      
       setError('Failed to fetch orders');
     } finally {
       setLoading(false);
@@ -29,7 +30,10 @@ const MyOrders = () => {
     try {
       const response = await axios.get(url + "/api/order/subscriptionDetails", {
         headers: { token },
+
       });
+      console.log(token);
+      
       setSubscriptions(response.data.data || []);
     } catch (err) {
       setError('Failed to fetch subscriptions');

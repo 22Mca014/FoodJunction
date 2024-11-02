@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 
 const authMiddleware = async (req, res, next) => {
+    console.log('David');
+    
     const { token } = req.headers;
     if (!token) {
         return res.json({success:false,message:'Not Authorized Login Again'});
@@ -10,6 +12,8 @@ const authMiddleware = async (req, res, next) => {
         req.body.userId = token_decode.id;
         next();
     } catch (error) {
+        console.log("middleware error");
+        
         return res.json({success:false,message:error.message});
     }
 }
