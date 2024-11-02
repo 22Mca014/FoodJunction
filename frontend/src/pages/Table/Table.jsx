@@ -10,7 +10,7 @@ function Table() {
     quantity: 1,
     date: '',
   });
-  const backendURL = 'http://localhost:4000'; // Replace with your backend URL
+  const backendURL = 'https://foodjunction.onrender.com'; // Replace with your backend URL
   const [availableTables, setAvailableTables] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +32,7 @@ function Table() {
       if (formData.date && formData.tableType) {
         setLoading(true);
         try {
-          const response = await axios.post('https://foodjunction.onrender.com/api/tables/available', {
+          const response = await axios.post(`${backendURL}/api/tables/available`, {
             date: formData.date,
             tableType: formData.tableType,
           });
