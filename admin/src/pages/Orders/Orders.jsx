@@ -25,7 +25,7 @@ const Order = () => {
 
   const fetchAllSubscriptions = async () => {
     try {
-      const response = await axios.get(`${url}/api/order/subscriptionDetails`);
+      const response = await axios.get(`${url}/api/order/subscriptionDetailsforadmin`);
       if (response.data && response.data.success) {
         setSubscriptions(response.data.data.reverse());
       } else {
