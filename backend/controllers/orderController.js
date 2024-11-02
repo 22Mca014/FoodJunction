@@ -285,17 +285,26 @@ const createSubscription = async (req, res) => {
 
 const getSubscribedUsers = async (req, res) => {
   try {
-    // Find active subscriptions with payment status 'paid' and end date in the future
-    const subscriptions = await Subscription.find({
-      paymentStatus: 'paid',
-      subscriptionEndDate: { $gte: new Date() }  // Only active subscriptions
-    });
+    const { userId } = req.query; // Extract userId from query parameters
 
-    if (subscriptions.length === 0) {
-      return res.status(404).json({ success: false, message: 'No subscribed users found' });
+    if (!userId) {
+      return res.status(400).json({ success: false, message: 'User ID is required' });
     }
 
-    // Get user details for each subscription without populate
+    // Find active subscriptions for the specific user with payment status 'paid' and end date in the future
+    const filter = {
+      userId: userId,
+      paymentStatus: 'paid',
+      subscriptionEndDate: { $gte: new Date() }  // Only active subscriptions
+    };
+
+    const subscriptions = await Subscription.find(filter);
+
+    if (subscriptions.length === 0) {
+      return res.status(404).json({ success: false, message: 'No subscriptions found for the specified user' });
+    }
+
+    // Get user details for each subscription
     const subscribedUsers = await Promise.all(
       subscriptions.map(async (subscription) => {
         const user = await userModel.findById(subscription.userId).select('name email');
@@ -306,10 +315,9 @@ const getSubscribedUsers = async (req, res) => {
           subscriptionEndDate: subscription.subscriptionEndDate,
           subscriptionPayment: subscription.subscriptionPayment,
           paymentStatus: subscription.paymentStatus,
-          pincode:subscription.pincode,
-          phoneNumber:subscription.phoneNumber,
-          deliveryAddress:subscription.deliveryAddress
-
+          pincode: subscription.pincode,
+          phoneNumber: subscription.phoneNumber,
+          deliveryAddress: subscription.deliveryAddress
         };
       })
     );
@@ -319,7 +327,7 @@ const getSubscribedUsers = async (req, res) => {
       data: subscribedUsers,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching subscribed users', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching subscribed user details', error: error.message });
   }
 };
 

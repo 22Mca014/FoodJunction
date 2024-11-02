@@ -15,7 +15,7 @@ orderRouter.post("/placecod",authMiddleware,placeOrderCod);
 orderRouter.post("/subscription",authMiddleware,createSubscription);
 
 //subscription details
-orderRouter.get("/subscriptionDetails",getSubscribedUsers);
+orderRouter.get("/subscriptionDetails",authMiddleware,getSubscribedUsers);
 
 
 
