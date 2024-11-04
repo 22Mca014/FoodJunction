@@ -7,7 +7,7 @@ import authMiddleware from '../../middleware/auth.js';
 const BookRouter = express.Router();
 BookRouter.post('/book',authMiddleware,bookTable);
 BookRouter.get('/book-table',fetchBooking);
-BookRouter.get('/book-table-user',fetchBookTable);
+BookRouter.get('/book-table-user',authMiddleware,fetchBookTable);
 
 
 
