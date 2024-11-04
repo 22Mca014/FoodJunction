@@ -50,16 +50,27 @@ const MyOrders = () => {
       const response = await axios.get(url + "/api/bookings/book-table-user", {
         headers: { token },
       });
-      setBookTable(response.data.data || []);
-      setError(null); // Reset error state
+      console.log('Response:', response); // Check the full response in the console
+  
+      // Make sure you're accessing the data structure correctly
+      if (response.data && response.data.bookings) {
+        setBookTable(response.data.bookings);
+      } else {
+        setBookTable([]);
+      }
+      setError(null);
     } catch (error) {
+      console.error('Fetch error:', error);
       setError('Failed to fetch booked tables');
     } finally {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
+    console.log('Active tab:', activeTab);
+    console.log('Booked table data:', bookTable); // Add this to verify state
+  
     if (token) {
       if (activeTab === 'orders') {
         fetchOrders();
@@ -70,6 +81,7 @@ const MyOrders = () => {
       }
     }
   }, [activeTab, token]);
+  
 
   if (loading) {
     return <div className="loading">Loading...</div>;
