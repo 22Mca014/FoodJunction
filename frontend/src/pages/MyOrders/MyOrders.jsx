@@ -15,11 +15,13 @@ const MyOrders = () => {
   const { url, token, currency } = useContext(StoreContext);
 
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(url + "/api/order/userorders", {}, {
         headers: { token },
       });
       setData(response.data.data || []);
+      setError(null); // Reset error state
     } catch (err) {
       setError('Failed to fetch orders');
     } finally {
@@ -28,42 +30,49 @@ const MyOrders = () => {
   };
 
   const fetchSubscriptions = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(url + "/api/order/subscriptionDetails", {
         headers: { token },
       });
       setSubscriptions(response.data.data || []);
+      setError(null); // Reset error state
     } catch (err) {
       setError('Failed to fetch subscriptions');
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchBookTable = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(url + "/api/bookings/book-table-user", {
         headers: { token },
       });
       setBookTable(response.data.data || []);
+      setError(null); // Reset error state
     } catch (error) {
       setError('Failed to fetch booked tables');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (token) {
-      fetchOrders();
-      fetchSubscriptions();
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (activeTab === 'bookedTable' && token) {
-      fetchBookTable();
+      if (activeTab === 'orders') {
+        fetchOrders();
+      } else if (activeTab === 'subscriptions') {
+        fetchSubscriptions();
+      } else if (activeTab === 'bookedTable') {
+        fetchBookTable();
+      }
     }
   }, [activeTab, token]);
 
   if (loading) {
-    return <div className="loading">Loading your orders...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   if (error) {
@@ -76,21 +85,18 @@ const MyOrders = () => {
         <button
           className={activeTab === 'orders' ? 'active' : ''}
           onClick={() => setActiveTab('orders')}
-          style={{ backgroundColor: '#008cba', padding: '15px', marginRight: '15px' }}
         >
           My Orders
         </button>
         <button
           className={activeTab === 'subscriptions' ? 'active' : ''}
           onClick={() => setActiveTab('subscriptions')}
-          style={{ backgroundColor: '#008cba', padding: '15px', marginRight: '15px' }}
         >
           Subscription Details
         </button>
         <button
           className={activeTab === 'bookedTable' ? 'active' : ''}
           onClick={() => setActiveTab('bookedTable')}
-          style={{ backgroundColor: '#008cba', padding: '15px' }}
         >
           Booked Tables
         </button>
@@ -113,7 +119,6 @@ const MyOrders = () => {
                 <p>{currency}{order.amount}.00</p>
                 <p>Items: {order.items.length}</p>
                 <p><span>&#x25cf;</span> <b>{order.status}</b></p>
-                <button onClick={fetchOrders} style={{ backgroundColor: '#008cba', padding: '15px' }}>Track Order</button>
               </div>
             ))
           )}

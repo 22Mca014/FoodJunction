@@ -87,14 +87,14 @@ export const fetchBooking = async (req, res) => {
 // fetch book table for  user
 export const fetchBookTable = async (req, res) => {
   try {
-    const userId = req.params.userId || req.query.userId; // Accept userId from route params or query
+    const { userId } = req.body; // Destructure userId from request body
 
     if (!userId) {
       return res.status(400).json({ success: false, message: 'User ID is required' });
     }
 
     // Fetch bookings for the specific user and populate user details
-    const bookings = await Booking.find({ userId }).populate('userId', 'name email');
+    const bookings = await Booking.find({ userId });
 
     if (!bookings || bookings.length === 0) {
       return res.status(404).json({ success: false, message: 'No bookings found for this user' });
@@ -104,8 +104,6 @@ export const fetchBookTable = async (req, res) => {
       success: true,
       message: 'Booked tables fetched successfully',
       bookings: bookings.map((booking) => ({
-        userName: booking.userId.name,
-        userEmail: booking.userId.email,
         date: booking.date,
         tableType: booking.tableType,
         quantity: booking.quantity,
@@ -117,4 +115,3 @@ export const fetchBookTable = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error fetching bookings', error: error.message });
   }
 };
-
