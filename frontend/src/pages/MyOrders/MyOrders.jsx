@@ -5,10 +5,12 @@ import { StoreContext } from '../../Context/StoreContext';
 import { assets } from '../../assets/assets';
 
 const MyOrders = () => {
-  const [data, setData] = useState([]);        // Orders data
-  const [subscriptions, setSubscriptions] = useState([]);  // Subscription data
-  const [loading, setLoading] = useState(true);  // Loading state
-  const [error, setError] = useState(null);      // Error state
+  const [data, setData] = useState([]); // Orders data
+  const [subscriptions, setSubscriptions] = useState([]); // Subscription data
+  const [bookTable, setBookTable] = useState([]); // Booked table data
+
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
   const [activeTab, setActiveTab] = useState('orders'); // Tab state
   const { url, token, currency } = useContext(StoreContext);
 
@@ -19,7 +21,6 @@ const MyOrders = () => {
       });
       setData(response.data.data || []);
     } catch (err) {
-      
       setError('Failed to fetch orders');
     } finally {
       setLoading(false);
@@ -30,13 +31,21 @@ const MyOrders = () => {
     try {
       const response = await axios.get(url + "/api/order/subscriptionDetails", {
         headers: { token },
-
       });
-      console.log(token);
-      
       setSubscriptions(response.data.data || []);
     } catch (err) {
       setError('Failed to fetch subscriptions');
+    }
+  };
+
+  const fetchBookTable = async () => {
+    try {
+      const response = await axios.get(url + "/api/bookings/book-table-user", {
+        headers: { token },
+      });
+      setBookTable(response.data.data || []);
+    } catch (error) {
+      setError('Failed to fetch booked tables');
     }
   };
 
@@ -46,6 +55,12 @@ const MyOrders = () => {
       fetchSubscriptions();
     }
   }, [token]);
+
+  useEffect(() => {
+    if (activeTab === 'bookedTable' && token) {
+      fetchBookTable();
+    }
+  }, [activeTab, token]);
 
   if (loading) {
     return <div className="loading">Loading your orders...</div>;
@@ -58,64 +73,84 @@ const MyOrders = () => {
   return (
     <div className="container" style={{ maxWidth: "1200px" }}>
       <div className="tabs">
-        <button 
-          className={activeTab === 'orders' ? 'active' : ''} 
+        <button
+          className={activeTab === 'orders' ? 'active' : ''}
           onClick={() => setActiveTab('orders')}
           style={{ backgroundColor: '#008cba', padding: '15px', marginRight: '15px' }}
         >
           My Orders
         </button>
-        <button 
-          className={activeTab === 'subscriptions' ? 'active' : ''} 
+        <button
+          className={activeTab === 'subscriptions' ? 'active' : ''}
           onClick={() => setActiveTab('subscriptions')}
-          style={{ backgroundColor: '#008cba', padding: '15px' }}
+          style={{ backgroundColor: '#008cba', padding: '15px', marginRight: '15px' }}
         >
           Subscription Details
+        </button>
+        <button
+          className={activeTab === 'bookedTable' ? 'active' : ''}
+          onClick={() => setActiveTab('bookedTable')}
+          style={{ backgroundColor: '#008cba', padding: '15px' }}
+        >
+          Booked Tables
         </button>
       </div>
 
       {activeTab === 'orders' && (
         <div className="my-orders">
           <h2>My Orders</h2>
-          <div className="container" style={{ maxWidth: "1200px" }}>
-            {data.length === 0 ? (
-              <p>No orders found</p>
-            ) : (
-              data.map((order, index) => (
-                <div key={index} className="my-orders-order">
-                  <img src={assets.parcel_icon} alt="Order Icon" />
-                  <p>{order.items.map((item, idx) => (
-                    idx === order.items.length - 1
-                      ? `${item.name} x ${item.quantity}`
-                      : `${item.name} x ${item.quantity}, `
-                  ))}</p>
-                  <p>{currency}{order.amount}.00</p>
-                  <p>Items: {order.items.length}</p>
-                  <p><span>&#x25cf;</span> <b>{order.status}</b></p>
-                  <button onClick={fetchOrders} style={{ backgroundColor: '#008cba', padding: '15px' }}>Track Order</button>
-                </div>
-              ))
-            )}
-          </div>
+          {data.length === 0 ? (
+            <p>No orders found</p>
+          ) : (
+            data.map((order, index) => (
+              <div key={index} className="my-orders-order">
+                <img src={assets.parcel_icon} alt="Order Icon" />
+                <p>{order.items.map((item, idx) => (
+                  idx === order.items.length - 1
+                    ? `${item.name} x ${item.quantity}`
+                    : `${item.name} x ${item.quantity}, `
+                ))}</p>
+                <p>{currency}{order.amount}.00</p>
+                <p>Items: {order.items.length}</p>
+                <p><span>&#x25cf;</span> <b>{order.status}</b></p>
+                <button onClick={fetchOrders} style={{ backgroundColor: '#008cba', padding: '15px' }}>Track Order</button>
+              </div>
+            ))
+          )}
         </div>
       )}
 
       {activeTab === 'subscriptions' && (
         <div className="subscription">
           <h2>Subscription Details</h2>
-          <div className="container" style={{ maxWidth: "1200px" }}>
-            {subscriptions.length === 0 ? (
-              <p>No subscriptions found</p>
-            ) : (
-              subscriptions.map((subscription, index) => (
-                <div key={index} className="subscription-item">
-                  <p><strong>Subscription Type:</strong> {subscription.subscriptionType}</p>
-                  <p><strong>Start Date:</strong> {new Date(subscription.subscriptionStartDate).toLocaleDateString()}</p>
-                  <p><strong>End Date:</strong> {new Date(subscription.subscriptionEndDate).toLocaleDateString()}</p>
-                </div>
-              ))
-            )}
-          </div>
+          {subscriptions.length === 0 ? (
+            <p>No subscriptions found</p>
+          ) : (
+            subscriptions.map((subscription, index) => (
+              <div key={index} className="subscription-item">
+                <p><strong>Subscription Type:</strong> {subscription.subscriptionType}</p>
+                <p><strong>Start Date:</strong> {new Date(subscription.subscriptionStartDate).toLocaleDateString()}</p>
+                <p><strong>End Date:</strong> {new Date(subscription.subscriptionEndDate).toLocaleDateString()}</p>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {activeTab === 'bookedTable' && (
+        <div className="booked-table">
+          <h2>Booked Tables</h2>
+          {bookTable.length === 0 ? (
+            <p>No booked tables found</p>
+          ) : (
+            bookTable.map((booking, index) => (
+              <div key={index} className="subscription-item">
+                <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                <p><strong>Table Type:</strong> {booking.tableType}</p>
+                <p><strong>Quantity:</strong> {booking.quantity}</p>
+              </div>
+            ))
+          )}
         </div>
       )}
     </div>

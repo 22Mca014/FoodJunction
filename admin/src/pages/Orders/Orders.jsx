@@ -25,17 +25,23 @@ const Order = () => {
 
   const fetchAllSubscriptions = async () => {
     try {
-      const response = await axios.get(`${url}/api/order/subscriptionDetailsforadmin`);
+      const response = await axios.get(`${url}/api/order/subscriptionDetailsforadmin`, {
+        headers: { token }, // Ensure token is included if needed
+      });
+      
+      console.log('Response:', response.data); // Log the full response for debugging
+      
       if (response.data && response.data.success) {
         setSubscriptions(response.data.data.reverse());
       } else {
         toast.error('Error fetching subscriptions');
       }
     } catch (error) {
+      console.error('Error fetching subscriptions:', error.response ? error.response.data : error.message);
       toast.error('Error fetching subscriptions');
     }
   };
-
+  
   const fetchTableBookings = async () => {
     try {
       const response = await axios.get(`${url}/api/bookings/book-table`);

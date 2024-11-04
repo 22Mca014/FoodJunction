@@ -56,7 +56,8 @@ export const bookTable = async (req, res) => {
   }
 };
 
-//fetch booking
+//fetch booking//i have create for admin panel so i can  fetch booking for admin panel
+
 export const fetchBooking = async (req, res) => {
   try {
     // Populate 'userId' to fetch user details (name and email) from the User model
@@ -83,3 +84,37 @@ export const fetchBooking = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error fetching bookings', error: error.message });
   }
 };
+// fetch book table for  user
+export const fetchBookTable = async (req, res) => {
+  try {
+    const userId = req.params.userId || req.query.userId; // Accept userId from route params or query
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: 'User ID is required' });
+    }
+
+    // Fetch bookings for the specific user and populate user details
+    const bookings = await Booking.find({ userId }).populate('userId', 'name email');
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json({ success: false, message: 'No bookings found for this user' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Booked tables fetched successfully',
+      bookings: bookings.map((booking) => ({
+        userName: booking.userId.name,
+        userEmail: booking.userId.email,
+        date: booking.date,
+        tableType: booking.tableType,
+        quantity: booking.quantity,
+      })),
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error fetching bookings', error: error.message });
+  }
+};
+
