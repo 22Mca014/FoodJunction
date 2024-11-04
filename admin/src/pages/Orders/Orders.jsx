@@ -25,9 +25,7 @@ const Order = () => {
 
   const fetchAllSubscriptions = async () => {
     try {
-      const response = await axios.get(`${url}/api/order/subscriptionDetailsforadmin`, {
-        headers: { token }, // Ensure token is included if needed
-      });
+      const response = await axios.get(`${url}/api/order/subscriptionDetailsforadmin`);
       
       console.log('Response:', response.data); // Log the full response for debugging
       
