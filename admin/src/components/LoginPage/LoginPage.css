@@ -1,69 +1,163 @@
+/* Container Styling */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    height: 100vh;
-    margin: 0;
-  }
-  .login-card {
-    background-color: #ffffff;
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    max-width: 380px;
-    width: 100%;
-    text-align: center;
-    transition: transform 0.3s ease;
-    overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  font-family: Arial, sans-serif;
+}
 
+/* Card Styling */
+.login-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Heading and Paragraph */
+.login-card h2 {
+  margin-bottom: 10px;
+  color: #333;
+  font-size: 24px;
+}
+
+.login-card p {
+  margin-bottom: 20px;
+  color: #555;
+  font-size: 16px;
+}
+
+/* Input Fields */
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #ff758c;
+  outline: none;
+}
+
+/* Buttons */
+.login-button,
+.reset-button,
+.close-button {
+  padding: 10px 20px;
+  background: #ff758c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-button:hover,
+.reset-button:hover,
+.close-button:hover {
+  background: #e6457a;
+}
+
+/* Forgot Password Link */
+.forgot-password-link {
+  margin-top: 10px;
+  color: #ff758c;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+  color: #e6457a;
+}
+
+/* Error Message */
+.error-message {
+  color: #e6457a;
+  margin-bottom: 15px;
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Forgot Password Modal */
+.forgot-password-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.5s ease-in-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  color: #333;
+}
+
+.modal-content p {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.forgot-message {
+  margin-top: 10px;
+  color: green;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  .login-card:hover {
-    transform: translateY(-5px);
+  to {
+    opacity: 1;
   }
-  h2 {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 0.5rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
   }
-  .input-group {
-    margin-bottom: 1rem;
-    text-align: left;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-   .input-group input {
-   
-   
-  
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  } 
-  
-  .input-group input:focus {
-    border-color: #4b9cea;
-    box-shadow: 0 4px 8px rgba(75, 156, 234, 0.2);
-    outline: none;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
   }
-  
-  .login-button {
-    width: 100%;
-    
-    background-color: #4b9cea;
-    color: #ffffff;
-    font-size: 1.1rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s ease;
+  25% {
+    transform: translateX(-5px);
   }
-  
-  .login-button:hover {
-    background-color: #3a8bc1;
+  50% {
+    transform: translateX(5px);
   }
-  
-  .login-button:active {
-    transform: scale(0.98);
+  75% {
+    transform: translateX(-5px);
   }
+}

@@ -170,6 +170,83 @@ const adminLogin = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   };
+  const createAdmin = async (req, res) => {
+    const { name, email, password, role } = req.body;
+  
+    try {
+      // Validate required fields
+      if (!name || !email || !password || !role) {
+        return res.status(400).json({ success: false, message: "All fields are required." });
+      }
+  
+      // Ensure the role is 'ADMIN'
+      if (role !== "ADMIN") {
+        return res.status(400).json({ success: false, message: "Invalid role. Only 'ADMIN' is allowed." });
+      }
+  
+      // Check if the email already exists
+      const existingUser = await userModel.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: "Email already exists." });
+      }
+  
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      // Create the admin user
+      const newAdmin = new userModel({
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      });
+  
+      // Save the admin to the database
+      await newAdmin.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "Admin user created successfully!",
+        data: {
+          id: newAdmin._id,
+          name: newAdmin.name,
+          email: newAdmin.email,
+          role: newAdmin.role,
+        },
+      });
+    } catch (error) {
+      console.error("Error creating admin:", error);
+      res.status(500).json({ success: false, message: "Internal server error." });
+    }
+  };
+  //fetch all admin users
+  const fetchAdmins = async (req, res) => {
+    try {
+      // Fetch users with role "ADMIN" and select only name, email, and role
+      const admins = await userModel.find({ role: "ADMIN" }).select("name email role");
+  
+      // If no admins found, return a message
+      if (admins.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No admin users found.",
+        });
+      }
+  
+      // Return the list of admins
+      res.status(200).json({
+        success: true,
+        message: "Admin users fetched successfully.",
+        data: admins,
+      });
+    } catch (error) {
+      console.error("Error fetching admin users:", error);
+      res.status(500).json({
+        success: false,
+        message: "Internal server error.",
+      });
+    }
+  };
   
 
-export { loginUser, registerUser, forgotPassword, resetPassword,adminLogin };
+export { loginUser, registerUser, forgotPassword, resetPassword,adminLogin,createAdmin,fetchAdmins };

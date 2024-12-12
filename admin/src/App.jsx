@@ -12,6 +12,7 @@ import Discount from './pages/Discount/Discount';
 import MenuSetter from './pages/MenuSetter/MenuSetter';
 import AddTable from './pages/AddTable/AddTable';
 import LoginPage from './components/LoginPage/LoginPage';
+import CreateAdmin from './pages/Admin/Admin';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -39,6 +40,8 @@ const App = () => {
               <Route path='/discount' element={<Discount />} />
               <Route path='/menusetter' element={<MenuSetter />} />
               <Route path='/addTable' element={<AddTable />} />
+              <Route path='/admin' element={<CreateAdmin />} />
+
             </Routes>
           </div>
         </>
